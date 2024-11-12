@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Strength Checker</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.password-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#strengthIndicator {
+    margin-top: 10px;
+    text-align: left;
+}
+
+#strengthBar {
+    height: 10px;
+    width: 100%;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.weak {
+    background-color: red;
+}
+
+.medium {
+    background-color: orange;
+}
+
+.strong {
+    background-color: green;
+}
+
+#strengthText {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+    </style>
+</head>
+<body>
+
+    <div class="password-container">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password">
+        <div id="strengthIndicator">
+            <span id="strengthText"></span>
+            <div id="strengthBar"></div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+    $('#password').on('keyup', function() {
+        var password = $(this).val();
+        var strength = checkPasswordStrength(password);
+        displayStrength(strength);
+    });
+
+    function checkPasswordStrength(password) {
+        var strength = { level: 0, text: 'Weak' };
+
+        // Check password length
+        if (password.length >= 8) {
+            strength.level++;
+        }
+
+        // Check for uppercase letters
+        if (/[A-Z]/.test(password)) {
+            strength.level++;
+        }
+
+        // Check for lowercase letters
+        if (/[a-z]/.test(password)) {
+            strength.level++;
+        }
+
+        // Check for numbers
+        if (/\d/.test(password)) {
+            strength.level++;
+        }
+
+        // Check for special characters
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            strength.level++;
+        }
+
+        // Assign strength text based on level
+        switch (strength.level) {
+            case 0:
+            case 1:
+                strength.text = 'Weak';
+                break;
+            case 2:
+            case 3:
+                strength.text = 'Medium';
+                break;
+            case 4:
+            case 5:
+                strength.text = 'Strong';
+                break;
+        }
+
+        return strength;
+    }
+
+    function displayStrength(strength) {
+        $('#strengthText').text(strength.text);
+        
+        // Reset classes and apply appropriate strength class
+        $('#strengthBar').removeClass().addClass(strength.text.toLowerCase());
+
+        // Optional: Color bar based on strength
+        if (strength.text === 'Weak') {
+            $('#strengthBar').css('width', '33%');
+        } else if (strength.text === 'Medium') {
+            $('#strengthBar').css('width', '66%');
+        } else if (strength.text === 'Strong') {
+            $('#strengthBar').css('width', '100%');
+        }
+    }
+});
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>
